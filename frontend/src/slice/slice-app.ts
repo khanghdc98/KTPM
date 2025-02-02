@@ -1,26 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 type AppState = {
-  userInputs: {
-    video: File | null
-    text: string
-  }
-}
+	userInputs: {
+		video: File | null;
+		text: string;
+	};
+};
 
 const initialState: AppState = {
-  userInputs: {
-    video: null,
-    text: ""
-  }
-
-}
+	userInputs: {
+		video: null,
+		text: "",
+	},
+};
 
 export const sliceApp = createSlice({
-  name: 'sliceApp',
-  initialState,
-  reducers: {
-    setUserInputs: (state, action) => {
-      state.userInputs = action.payload
-    }
-  },
-})
+	name: "sliceApp",
+	initialState,
+	reducers: {
+		setUserInputs: (state, action) => {
+			state.userInputs = action.payload;
+		},
+	},
+});

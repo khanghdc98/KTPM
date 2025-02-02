@@ -1,13 +1,16 @@
 import { TextField } from "@mui/material";
-import { appActions, useAppDispatch, useAppSelector } from "../../AppStore";
 import { useCallback } from "react";
+import { appActions, useAppDispatch, useAppSelector } from "../../AppStore";
 
 const TextInput = () => {
     const dispatch = useAppDispatch();
     const userInputs = useAppSelector((state) => state.app.userInputs);
-    const setText = useCallback((text: string) => {
-        dispatch(appActions.setUserInputs({ ...userInputs, text }));
-    }, [dispatch]);
+    const setText = useCallback(
+        (text: string) => {
+            dispatch(appActions.setUserInputs({ ...userInputs, text }));
+        },
+        [dispatch, userInputs],
+    );
 
     return (
         <TextField
