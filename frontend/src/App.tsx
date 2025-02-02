@@ -15,7 +15,7 @@ const App = () => {
       <StoreProvider>
         <DashboardAppBar />
         <CssBaseline enableColorScheme />
-        <Box component="main" sx={{ paddingTop: '64px', height: '100vh', overflow: 'auto' }}>
+        <Box component="main" sx={{ paddingTop: '48px', height: '100vh', overflow: 'auto' }}>
           <AppRouter />
         </Box>
       </StoreProvider>

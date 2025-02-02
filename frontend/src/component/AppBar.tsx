@@ -37,6 +37,7 @@ export const DashboardAppBar = () => {
     return (
         <AppBar position="absolute" open={false}>
             <Toolbar
+                variant='dense'
                 sx={{
                     pr: '24px', // keep right padding when drawer closed
                 }}
