@@ -10,11 +10,13 @@ interface FrameCache {
 
 interface VideoFrameState {
 	videoSrc: string | null; // Store video source globally
+	prevVideoSrc: string | null; // Store previous video source
 	cache: FrameCache;
 }
 
 const initialState: VideoFrameState = {
 	videoSrc: null,
+	prevVideoSrc: null,
 	cache: {},
 };
 
@@ -82,6 +84,7 @@ export const videoFrameSlice = createSlice({
 			.addCase(
 				setVideoSource.fulfilled,
 				(state, action: PayloadAction<string>) => {
+					state.prevVideoSrc = state.videoSrc;
 					state.videoSrc = action.payload;
 					state.cache = {};
 				},
