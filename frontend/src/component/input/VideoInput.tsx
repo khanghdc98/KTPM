@@ -4,11 +4,16 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { appActions, useAppDispatch, useAppSelector } from "../../AppStore";
 
-const VideoInput = () => {
+type VideoInputProps = {
+	videoURL: string | null;
+	setVideoURL: React.Dispatch<React.SetStateAction<string | null>>;
+};
+
+const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 	const dispatch = useAppDispatch();
 	const userInputs = useAppSelector((state) => state.app.userInputs);
 
-	const [videoURL, setVideoURL] = useState<string | null>(null);
+	const [] = useState<string | null>(null);
 
 	const convertFileToBase64 = (file: File): Promise<string> => {
 		return new Promise((resolve, reject) => {
@@ -22,8 +27,8 @@ const VideoInput = () => {
 	const handleVideoUpload = async (file: File) => {
 		if (file) {
 			const base64 = await convertFileToBase64(file);
-
-			setVideoURL(URL.createObjectURL(file)); // Set preview
+			const videoFile = URL.createObjectURL(file)
+			setVideoURL(videoFile); // Set preview
 
 			dispatch(
 				appActions.setUserInputs({

@@ -14,13 +14,17 @@
 		"@mui/icons-material": "^6.4.2",
 		"@mui/material": "^6.4.2",
 		"@reduxjs/toolkit": "^2.5.1",
+		"@types/chroma-js": "^3.1.1",
 		"@types/lodash": "^4.17.15",
+		"@types/react-virtualized": "^9.22.0",
+		"chroma-js": "^3.1.2",
 		"lodash": "^4.17.21",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"react-dropzone": "^14.3.5",
 		"react-redux": "^9.2.0",
-		"react-router": "^7.1.5"
+		"react-router": "^7.1.5",
+		"react-virtualized": "^9.22.6"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

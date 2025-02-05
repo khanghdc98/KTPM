@@ -2,13 +2,27 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 import TextInput from "../component/input/TextInput";
 import VideoInput from "../component/input/VideoInput";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../AppStore";
+import { setVideoSource } from "../slice/videoFrameSlice";
 
 export const UserInputPage = () => {
 	const nav = useNavigate();
+	const dispatch = useAppDispatch();
+	const [videoURL, setVideoURL] = useState<string | null>(null);
+
+	const videoSrc = useAppSelector((state) => state.videoFrame.videoSrc);
 
 	const handleSubmit = () => {
 		console.log("Submit");
-		nav("/result");
+		if (!videoURL) {
+			return;
+		}
+		dispatch(setVideoSource(videoURL));
+
+		if (videoSrc) {
+			nav("/result");
+		}
 	};
 
 	return (
@@ -44,7 +58,7 @@ export const UserInputPage = () => {
 				flexGrow={1}
 			>
 				<Box flex={1} mr={1}>
-					<VideoInput />
+					<VideoInput videoURL={videoURL} setVideoURL={setVideoURL} />
 				</Box>
 				<Box flex={1} ml={1}>
 					<TextInput />

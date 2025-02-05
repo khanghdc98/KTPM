@@ -1,11 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-type AppState = {
-	userInputs: {
-		video: File | null;
-		text: string;
-	};
-};
+import { AppState } from "../types/AppState";
 
 const initialState: AppState = {
 	userInputs: {

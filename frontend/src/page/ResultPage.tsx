@@ -1,13 +1,19 @@
 import { ChangeCircleRounded } from "@mui/icons-material";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { PlainJsonTab } from "../tab/PlainJsonTab";
+import { mockData } from "../data/mock";
+import { Layout1Tab } from "../tab/Layout1Tab";
 
 const tabs = ["Layout 1", "Layout 2", "Layout 3", "Layout 4"];
+
+const layouts = [Layout1Tab, PlainJsonTab, PlainJsonTab, PlainJsonTab];
 
 export const ResultPage = () => {
 	const [activeTab, setActiveTab] = useState(0);
 	const nav = useNavigate();
+	const LayoutComponent = layouts[activeTab];
 
 	return (
 		<Box
@@ -93,12 +99,12 @@ export const ResultPage = () => {
 						border: `1px solid ${theme.palette.text.primary}`,
 						width: "98%",
 						minHeight: "93%",
+						maxHeight: "93%",
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "center",
 						transition: "all 0.3s ease",
 						borderRadius: "5px",
-						padding: 3,
 						marginTop: "-12px",
 						boxShadow: "4px 4px 20px 10px rgba(0,0,0,0.1)",
 						backgroundColor: `${theme.palette.background.paper}`,
@@ -106,7 +112,7 @@ export const ResultPage = () => {
 					}),
 				]}
 			>
-				<Typography variant="h6">Content for {tabs[activeTab]}</Typography>
+				<LayoutComponent data={mockData} />
 			</Box>
 		</Box>
 	);

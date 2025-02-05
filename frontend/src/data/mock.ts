@@ -1,47 +1,63 @@
-export const mockData = {
-	allFrames: [101223, 123123, 234234],
+import { GeneralData } from "../types/ResultType";
+
+export const mockData: GeneralData = {
+	allFrames: [1, 10, 12],
+	allSentences: [
+		"this is a cat biting a dog",
+		"this is a cat and a dog",
+	],
 	results: {
 		0: {
-			101223: [
+			1: [
 				{
 					tokenId: "a cat",
-					bbox: [0, 0, 100, 100],
+					bbox: [0, 0, 10, 10],
 				},
 				{
 					tokenId: "a dog",
-					bbox: [100, 100, 200, 200],
+					bbox: [10, 10, 20, 20],
 				},
 			],
-			123123: [
+			10: [
 				{
 					tokenId: "a cat",
-					bbox: [0, 0, 100, 100],
+					bbox: [0, 0, 10, 10],
 				},
 				{
 					tokenId: "a dog",
-					bbox: [100, 100, 200, 200],
+					bbox: [10, 10, 20, 20],
+				},
+			],
+			12: [
+				{
+					tokenId: "a cat",
+					bbox: [0, 0, 10, 10],
+				},
+				{
+					tokenId: "a dog",
+					bbox: [10, 10, 20, 20],
 				},
 			],
 		},
 		1: {
-			101223: [
+			10: [
 				{
 					tokenId: "a cat",
-					bbox: [0, 0, 100, 100],
+					bbox: [0, 0, 10, 10],
 				},
 				{
 					tokenId: "a dog",
-					bbox: [100, 100, 200, 200],
+					bbox: [10, 10, 20, 20],
 				},
 			],
-			123123: [
+			12: [
 				{
 					tokenId: "a cat",
-					bbox: [0, 0, 100, 100],
+					bbox: [0, 0, 10, 10],
 				},
 				{
 					tokenId: "a dog",
-					bbox: [100, 100, 200, 200],
+					bbox: [10, 10, 20, 20],
 				},
 			],
 		},
