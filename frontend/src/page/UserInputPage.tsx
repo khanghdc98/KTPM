@@ -1,9 +1,9 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAppDispatch, useAppSelector } from "../AppStore";
 import TextInput from "../component/input/TextInput";
 import VideoInput from "../component/input/VideoInput";
-import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../AppStore";
 import { setVideoSource } from "../slice/videoFrameSlice";
 
 export const UserInputPage = () => {

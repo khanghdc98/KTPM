@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { appActions, useAppDispatch, useAppSelector } from "../../AppStore";
+import { VideoDisplay } from "../VideoDisplay";
 
 type VideoInputProps = {
 	videoURL: string | null;
@@ -27,7 +28,7 @@ const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 	const handleVideoUpload = async (file: File) => {
 		if (file) {
 			const base64 = await convertFileToBase64(file);
-			const videoFile = URL.createObjectURL(file)
+			const videoFile = URL.createObjectURL(file);
 			setVideoURL(videoFile); // Set preview
 
 			dispatch(
@@ -66,14 +67,7 @@ const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 					dispatch(appActions.setUserInputs({ ...userInputs, video: null }));
 				}}
 			/>
-			<video
-				key={videoURL}
-				controls
-				style={{ borderRadius: 8, maxHeight: 300, width: "100%" }}
-			>
-				<source src={videoURL} type={userInputs.video?.type || "video/mp4"} />
-				Your browser does not support the video tag.
-			</video>
+			<VideoDisplay videoURL={videoURL} type={userInputs.video?.type} />
 		</Box>
 	) : (
 		<Box

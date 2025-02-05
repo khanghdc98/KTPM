@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AppState } from "../types/AppState";
+import type { AppState } from "../types/AppState";
 
 const initialState: AppState = {
 	userInputs: {

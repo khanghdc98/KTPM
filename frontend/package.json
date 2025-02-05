@@ -24,7 +24,8 @@
 		"react-dropzone": "^14.3.5",
 		"react-redux": "^9.2.0",
 		"react-router": "^7.1.5",
-		"react-virtualized": "^9.22.6"
+		"react-virtualized": "^9.22.6",
+		"webm-writer": "^1.0.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

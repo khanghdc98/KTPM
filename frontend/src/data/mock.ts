@@ -1,11 +1,8 @@
-import { GeneralData } from "../types/ResultType";
+import type { GeneralData } from "../types/ResultType";
 
 export const mockData: GeneralData = {
 	allFrames: [1, 10, 12],
-	allSentences: [
-		"this is a cat biting a dog",
-		"this is a cat and a dog",
-	],
+	allSentences: ["This is a cat biting a dog.", "This is a cat and a dog"],
 	results: {
 		0: {
 			1: [

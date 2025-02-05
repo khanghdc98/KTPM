@@ -2,13 +2,14 @@ import { ChangeCircleRounded } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { PlainJsonTab } from "../tab/PlainJsonTab";
 import { mockData } from "../data/mock";
 import { Layout1Tab } from "../tab/Layout1Tab";
+import { Layout2Tab } from "../tab/Layout2Tab";
+import { PlainJsonTab } from "../tab/PlainJsonTab";
 
 const tabs = ["Layout 1", "Layout 2", "Layout 3", "Layout 4"];
 
-const layouts = [Layout1Tab, PlainJsonTab, PlainJsonTab, PlainJsonTab];
+const layouts = [Layout1Tab, Layout2Tab, PlainJsonTab, PlainJsonTab];
 
 export const ResultPage = () => {
 	const [activeTab, setActiveTab] = useState(0);
