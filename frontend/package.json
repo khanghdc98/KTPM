@@ -3,7 +3,7 @@
 	"private": true,
 	"version": "1.0.0",
 	"scripts": {
-		"dev": "rsbuild dev --open",
+		"dev": "rsbuild dev",
 		"build": "rsbuild build",
 		"preview": "rsbuild preview",
 		"check": "pnpm biome check --write *"
@@ -28,7 +28,6 @@
 		"webm-writer": "^1.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
 		"@rsbuild/core": "^1.1.8",
 		"@rsbuild/plugin-react": "^1.0.7",
 		"@types/react": "^19.0.0",

@@ -23,6 +23,7 @@ export const UserInputPage = () => {
 	};
 
 	useEffect(() => {
+		console.log(videoSrc, prevVideoSrc)
 		if (videoSrc && prevVideoSrc !== videoSrc) {
 			nav("/result");
 		}

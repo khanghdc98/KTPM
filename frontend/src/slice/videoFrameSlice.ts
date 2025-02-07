@@ -30,7 +30,8 @@ export const setVideoSource = createAsyncThunk(
 export const fetchFrame = createAsyncThunk(
 	"videoFrame/fetchFrame",
 	async (timestamp: number, { getState }) => {
-		const state = getState() as { videoFrame: VideoFrameState };
+		try{
+			const state = getState() as { videoFrame: VideoFrameState };
 		const videoSrc = state.videoFrame.videoSrc;
 
 		if (!videoSrc) {
@@ -68,10 +69,13 @@ export const fetchFrame = createAsyncThunk(
 				video.onerror = (err) => reject(err);
 			},
 		);
+		}catch(e){
+			console.error("fetchFrame error", e)
+		}
 	},
 );
 
-export const videoFrameSlice = createSlice({
+const videoFrameSlice = createSlice({
 	name: "videoFrame",
 	initialState,
 	reducers: {
@@ -100,3 +104,5 @@ export const videoFrameSlice = createSlice({
 			);
 	},
 });
+
+export {videoFrameSlice};

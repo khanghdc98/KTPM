@@ -26,6 +26,7 @@ const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 	};
 
 	const handleVideoUpload = async (file: File) => {
+		try{
 		if (file) {
 			const base64 = await convertFileToBase64(file);
 			const videoFile = URL.createObjectURL(file);
@@ -38,6 +39,9 @@ const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 				}),
 			);
 		}
+	}catch(e){
+		console.error("handleVideoUpload", e)
+	}
 	};
 
 	const onDrop = useCallback((acceptedFiles: File[]) => {
