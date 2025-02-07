@@ -22,7 +22,7 @@ const initialState: VideoFrameState = {
 
 export const setVideoSource = createAsyncThunk(
 	"videoFrame/setVideoSource",
-	async (videoSrc: string) => {
+	async (videoSrc: string|null) => {
 		return videoSrc;
 	},
 );
@@ -87,7 +87,7 @@ const videoFrameSlice = createSlice({
 		builder
 			.addCase(
 				setVideoSource.fulfilled,
-				(state, action: PayloadAction<string>) => {
+				(state, action: PayloadAction<string | null>) => {
 					state.prevVideoSrc = state.videoSrc;
 					state.videoSrc = action.payload;
 					state.cache = {};
@@ -97,9 +97,11 @@ const videoFrameSlice = createSlice({
 				fetchFrame.fulfilled,
 				(
 					state,
-					action: PayloadAction<{ timestamp: number; frameData: string }>,
+					action: PayloadAction<{ timestamp: number; frameData: string } | undefined>,
 				) => {
-					state.cache[action.payload.timestamp] = action.payload.frameData;
+					if (action.payload) {
+						state.cache[action.payload.timestamp] = action.payload.frameData;
+					}
 				},
 			);
 	},

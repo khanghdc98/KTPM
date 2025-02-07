@@ -28,14 +28,14 @@ const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 	const handleVideoUpload = async (file: File) => {
 		try{
 		if (file) {
-			const base64 = await convertFileToBase64(file);
+			// const base64 = await convertFileToBase64(file);
 			const videoFile = URL.createObjectURL(file);
 			setVideoURL(videoFile); // Set preview
 
 			dispatch(
 				appActions.setUserInputs({
 					...userInputs,
-					video: { name: file.name, type: file.type, size: file.size, base64 },
+					video: { name: file.name, type: file.type, size: file.size, url: videoFile },
 				}),
 			);
 		}

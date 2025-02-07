@@ -6,6 +6,7 @@ const initialState: AppState = {
 		video: null,
 		text: "",
 	},
+	loadingPopUpMessage: "",
 };
 
 export const sliceApp = createSlice({
@@ -14,6 +15,9 @@ export const sliceApp = createSlice({
 	reducers: {
 		setUserInputs: (state, action) => {
 			state.userInputs = action.payload;
+		},
+		setLoadingPopUp: (state, action) => {
+			state.loadingPopUpMessage = action.payload;
 		},
 	},
 });

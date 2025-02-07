@@ -1,5 +1,11 @@
 import { Detection } from "../types/ResultType";
 
+export const createFileFromURL = async (url: string, fileName: string): Promise<File> => {
+    const response = await fetch(url);
+    const data = await response.blob();
+    return new File([data], fileName, { type: data.type });
+};
+
 export async function imagesToWebMWithMediaRecorder(
     frames: HTMLCanvasElement[],
     fps = 1,

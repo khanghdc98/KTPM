@@ -4,8 +4,9 @@ export type AppState = {
 			name: string;
 			type: string;
 			size: number;
-			base64: string;
+			url: string;
 		} | null;
 		text: string;
 	};
+	loadingPopUpMessage: string;
 };

@@ -1,7 +1,7 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "../AppStore";
+import { appActions, useAppDispatch, useAppSelector } from "../AppStore";
 import TextInput from "../component/input/TextInput";
 import VideoInput from "../component/input/VideoInput";
 import { setVideoSource } from "../slice/videoFrameSlice";
@@ -13,10 +13,17 @@ export const UserInputPage = () => {
 
 	const videoSrc = useAppSelector((state) => state.videoFrame.videoSrc);
 	const prevVideoSrc = useAppSelector((state) => state.videoFrame.prevVideoSrc);
+	const text = useAppSelector((state) => state.app.userInputs.text);
+	
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		console.log("Submit");
 		if (!videoURL) {
+			dispatch(appActions.setLoadingPopUp("Error: Video missing"));
+			return;
+		}
+		if (text === "") {
+			dispatch(appActions.setLoadingPopUp("Error: Text missing"));
 			return;
 		}
 		dispatch(setVideoSource(videoURL));
@@ -28,8 +35,6 @@ export const UserInputPage = () => {
 			nav("/result");
 		}
 	}, [videoSrc, nav]);
-
-
 
 	return (
 		<Paper

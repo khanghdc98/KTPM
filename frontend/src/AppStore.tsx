@@ -6,6 +6,7 @@ import type { TypedUseSelectorHook } from "react-redux";
 import { Provider } from "react-redux";
 import { sliceApp } from "./slice/slice-app";
 import { videoFrameSlice } from "./slice/videoFrameSlice";
+import { alignApi } from "./api/alignApi";
 
 const makeStore = () => {
 	return configureStore({
@@ -15,8 +16,11 @@ const makeStore = () => {
 		reducer: combineReducers({
 			app: sliceApp.reducer,
 			videoFrame: videoFrameSlice.reducer,
+			alignApi: alignApi.reducer,
 		}),
-		middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([]),
+		middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([
+			alignApi.middleware,
+		]),
 	});
 };
 
