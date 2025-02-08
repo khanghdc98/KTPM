@@ -1,7 +1,7 @@
 import { Box, ClickAwayListener } from '@mui/material'
-import './LoadingPopup.css'
 import React, { useCallback } from 'react'
 import { appActions, useAppDispatch, useAppSelector } from '../../../AppStore'
+import './LoadingPopup.css'
 
 const LoadingPopup = () => {
   const loadingMessage = useAppSelector(

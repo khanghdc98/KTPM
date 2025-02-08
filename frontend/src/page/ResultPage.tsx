@@ -9,7 +9,6 @@ import { appActions, useAppDispatch, useAppSelector } from "../AppStore";
 import { setVideoSource } from "../slice/videoFrameSlice";
 import { useAlignVideoTextMutation } from "../api/alignApi";
 import { createFileFromURL } from "../utils/VideoUtils";
-import { GeneralData } from "../types/ResultType";
 import "../component/loader.css"
 
 const tabs = ["Layout 1", "Layout 2", "Layout 3", "Layout 4"];
@@ -77,6 +76,7 @@ export const ResultPage = () => {
 						}}
 						onClick={() => {
 							dispatch(setVideoSource(null));
+							dispatch(appActions.setUserInputs({ text: "", video: null }));
 							setTimeout(() => {
 								nav("/");
 							}, 1000);
@@ -154,7 +154,7 @@ export const ResultPage = () => {
 					}),
 				]}
 			>
-				{data ? (<LayoutComponent data={data} />) : <div  className="loader" />}
+				{data ? (<LayoutComponent data={data} />) : <div  className="loader2" />}
 			</Box>
 		</Box>
 	);
