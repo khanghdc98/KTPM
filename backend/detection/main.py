@@ -139,7 +139,7 @@ async def process_video_yolo(video_name: str):
         results = model(img, verbose=False)
 
         # Process results and draw bounding boxes
-        print(f"Results for {image_file}:")
+        # print(f"Results for {image_file}:")
         for result in results:
             for box in result.boxes:
                 x1, y1, x2, y2 = map(int, box.xyxy[0])  # Bounding box
@@ -147,14 +147,12 @@ async def process_video_yolo(video_name: str):
                 cls = int(box.cls[0])  # Class ID
                 top_left_x, top_left_y, width, height = convert_to_tlwh(x1, y1, x2, y2, image_width, image_height)
                 # print(f"  {cls}: {class_names[cls]} at ({top_left_x}, {top_left_y}) ({width}, {height})")
-                print(class_names[cls].lower(), conf)
+                # print(class_names[cls].lower(), conf)
                 if conf > 0.3:
                     outputs[timestamp].append({
                         "tokenId": class_names[cls].lower(), 
                         "bbox": [top_left_x, top_left_y, width, height]
                     })
-
-        print()
 
     return outputs
         

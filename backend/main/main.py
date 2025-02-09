@@ -24,7 +24,7 @@ def read_root():
     return {"message": "Hello, World!"}
 
 
-@app.post("/align_video", response_model=dict)
+@app.post("/align_video_deprecated", response_model=dict)
 async def upload_video(
     text: str = Form(...),
     video: UploadFile = File(...)
@@ -48,7 +48,7 @@ async def upload_video(
         return JSONResponse(status_code=204, content=None, headers=header)
 
 
-@app.post("/align_video2", response_model=dict)
+@app.post("/align_video", response_model=dict)
 async def upload_video(
     text: str = Form(...),
     video: UploadFile = File(...)
