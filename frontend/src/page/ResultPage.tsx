@@ -1,11 +1,15 @@
 import { ChangeCircleRounded } from "@mui/icons-material";
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { mockData } from "../data/mock";
 import { Layout1Tab } from "../tab/Layout1Tab";
 import { Layout2Tab } from "../tab/Layout2Tab";
 import { PlainJsonTab } from "../tab/PlainJsonTab";
+import { appActions, useAppDispatch, useAppSelector } from "../AppStore";
+import { setVideoSource } from "../slice/videoFrameSlice";
+import { useAlignVideoTextMutation } from "../api/alignApi";
+import { createFileFromURL } from "../utils/VideoUtils";
+import "../component/loader.css"
 
 const tabs = ["Layout 1", "Layout 2", "Layout 3", "Layout 4"];
 
@@ -14,7 +18,38 @@ const layouts = [Layout1Tab, Layout2Tab, PlainJsonTab, PlainJsonTab];
 export const ResultPage = () => {
 	const [activeTab, setActiveTab] = useState(0);
 	const nav = useNavigate();
+	const dispatch = useAppDispatch();
 	const LayoutComponent = layouts[activeTab];
+
+	const text = useAppSelector((state) => state.app.userInputs.text);
+	const videoURL = useAppSelector((state) => state.app.userInputs.video?.url);
+	const [alignVideoText, {data, isLoading, isError}] = useAlignVideoTextMutation();
+	console.log(data, isLoading, isError)
+
+	if (!isLoading){
+		dispatch(appActions.setLoadingPopUp(''))
+	}
+	if (isError){
+		dispatch(appActions.setLoadingPopUp('Error fetching result'))
+	}
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (!videoURL || videoURL === null ) {
+				dispatch(appActions.setLoadingPopUp('Error: Video missing'))
+				return;
+			}
+			if (!text || text === "") {
+				dispatch(appActions.setLoadingPopUp('Error: Text missing'))
+				return;
+			}
+			await createFileFromURL(videoURL, "uploaded_video.mp4").then((file) => {
+				alignVideoText({ text: text, video: file });
+				dispatch(appActions.setLoadingPopUp('Fetching results...'))
+			});
+		};
+		fetchData();
+	}, [videoURL, text]);
 
 	return (
 		<Box
@@ -39,7 +74,13 @@ export const ResultPage = () => {
 							right: "30px",
 							cursor: "pointer",
 						}}
-						onClick={() => nav("/")}
+						onClick={() => {
+							dispatch(setVideoSource(null));
+							dispatch(appActions.setUserInputs({ text: "", video: null }));
+							setTimeout(() => {
+								nav("/");
+							}, 1000);
+						}}
 					/>
 					{tabs.map((label, index) => (
 						<Box
@@ -113,7 +154,7 @@ export const ResultPage = () => {
 					}),
 				]}
 			>
-				<LayoutComponent data={mockData} />
+				{data ? (<LayoutComponent data={data} />) : <div  className="loader2" />}
 			</Box>
 		</Box>
 	);

@@ -1,7 +1,8 @@
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import AppRouter from "./AppRouter";
-import { StoreProvider } from "./AppStore";
+import { StoreProvider, useAppSelector } from "./AppStore";
 import { DashboardAppBar } from "./component/AppBar";
+import LoadingPopup from "./component/popup/loading/LoadingPopup";
 
 const theme = createTheme({
 	colorSchemes: {

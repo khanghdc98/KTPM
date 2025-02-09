@@ -19,7 +19,6 @@ export const ImageWithBBox: React.FC<ImageWithBBoxProps> = ({
 }) => {
 	const tokens = detections.map((d) => d.tokenId);
 	colorMap = colorMap ? colorMap : getUniqueColors([...new Set(tokens)]);
-	console.log("image", undefined !== image);
 
 	return (
 		<Box height="100%" position="relative" width="fit-content">

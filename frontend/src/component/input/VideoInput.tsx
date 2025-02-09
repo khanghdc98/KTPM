@@ -10,9 +10,10 @@ type VideoInputProps = {
 	setVideoURL: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
+const VideoInput = () => {
 	const dispatch = useAppDispatch();
 	const userInputs = useAppSelector((state) => state.app.userInputs);
+	const videoURL = useAppSelector((state) => state.app.userInputs.video?.url);
 
 	const [] = useState<string | null>(null);
 
@@ -28,14 +29,12 @@ const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 	const handleVideoUpload = async (file: File) => {
 		try{
 		if (file) {
-			const base64 = await convertFileToBase64(file);
+			// const base64 = await convertFileToBase64(file);
 			const videoFile = URL.createObjectURL(file);
-			setVideoURL(videoFile); // Set preview
-
 			dispatch(
 				appActions.setUserInputs({
 					...userInputs,
-					video: { name: file.name, type: file.type, size: file.size, base64 },
+					video: { name: file.name, type: file.type, size: file.size, url: videoFile },
 				}),
 			);
 		}
@@ -67,7 +66,6 @@ const VideoInput = ({ videoURL, setVideoURL }: VideoInputProps) => {
 					right: "-10px",
 				}}
 				onClick={() => {
-					setVideoURL(null);
 					dispatch(appActions.setUserInputs({ ...userInputs, video: null }));
 				}}
 			/>
