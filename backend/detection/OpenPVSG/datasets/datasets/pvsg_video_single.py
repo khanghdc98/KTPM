@@ -22,7 +22,7 @@ class PVSGVideoSingleVideoDataset:
     model."""
     def __init__(self,
                  pipeline=None,
-                 data_root='./data/',
+                 data_root='./OpenPVSG/data',
                  annotation_file='pvsg.json',
                  video_name='0010_8610561401',
                  test_mode=False,

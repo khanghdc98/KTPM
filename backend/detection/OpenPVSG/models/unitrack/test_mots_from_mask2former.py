@@ -76,6 +76,12 @@ def eval_seq(data_cfg,
                                           frame_id=frame_id)
             cv2.imwrite(os.path.join(save_dir, '{:04d}.png'.format(frame_id)),
                         online_im)
+            
+            bbox_dir = osp.join(save_root, 'bboxes')
+            io.mkdir_if_missing(bbox_dir)
+            with open(os.path.join(bbox_dir, '{:04d}.txt'.format(frame_id)), 'w') as f:
+                f.write(str(online_tlwhs))
+            f.close()
 
     result_filename = osp.join(save_root, 'quantitive/masks.txt')
     io.write_mots_results(result_filename, results)

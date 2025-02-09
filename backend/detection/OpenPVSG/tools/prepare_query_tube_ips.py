@@ -240,11 +240,11 @@ def main():
                           broadcast_buffers=False)
 
     # add cfg.tracker_cfg, which is not loaded but saved in a config file
-    cfg.tracker_cfg = Config.fromfile("./configs/unitrack/imagenet_resnet50_s3_womotion_timecycle.py")['tracker_cfg']
+    cfg.tracker_cfg = Config.fromfile("./OpenPVSG/configs/unitrack/imagenet_resnet50_s3_womotion_timecycle.py")['tracker_cfg']
     # pprint(cfg.tracker_cfg)
 
     split = args.split
-    pvsg_json = './data/pvsg.json'
+    pvsg_json = './OpenPVSG/data/pvsg.json'
     save_dir = args.work_dir
     with open(pvsg_json, 'r') as f:
         anno = json.load(f)
@@ -387,11 +387,11 @@ def get_detections():
                           broadcast_buffers=False)
 
     # add cfg.tracker_cfg, which is not loaded but saved in a config file
-    cfg.tracker_cfg = Config.fromfile("./configs/unitrack/imagenet_resnet50_s3_womotion_timecycle.py")['tracker_cfg']
+    cfg.tracker_cfg = Config.fromfile("./OpenPVSG/configs/unitrack/imagenet_resnet50_s3_womotion_timecycle.py")['tracker_cfg']
     # pprint(cfg.tracker_cfg)
 
     split = args.split
-    pvsg_json = './data/pvsg.json'
+    pvsg_json = './OpenPVSG/data/pvsg.json'
     save_dir = args.work_dir
     with open(pvsg_json, 'r') as f:
         anno = json.load(f)

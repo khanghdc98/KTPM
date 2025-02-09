@@ -20,7 +20,7 @@ class PVSGSingleVideoImageDataset:
     def __init__(
         self,
         pipeline=None,
-        data_root='./data/',
+        data_root='./OpenPVSG/data',
         annotation_file='pvsg.json',
         video_name='0010_8610561401',
         test_mode=False,
@@ -29,6 +29,7 @@ class PVSGSingleVideoImageDataset:
         assert data_root is not None
         data_root = Path(data_root)
         anno_file = data_root / annotation_file
+        print(f"anno file: {anno_file}")
 
         with open(anno_file, 'r') as f:
             anno = json.load(f)

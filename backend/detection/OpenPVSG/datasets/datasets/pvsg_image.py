@@ -17,7 +17,7 @@ from datasets.datasets.utils import PVSGAnnotation, vpq_eval
 class PVSGImageDataset:
     def __init__(self,
                  pipeline=None,
-                 data_root='./data/',
+                 data_root='./OpenPVSG/data',
                  annotation_file='pvsg.json',
                  test_mode=False,
                  split='train',

@@ -1,5 +1,7 @@
 import os
 import cv2
+from PIL import Image
+from ultralytics import YOLO
 import tempfile
 import numpy as np
 from fastapi import FastAPI, UploadFile, File
@@ -20,7 +22,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-SAVE_ROOT = "./OpenPVSG/data/ego4d"
+# SAVE_ROOT = "./OpenPVSG/data"
+SAVE_ROOT = "./data"
 
 
 async def extract_frames(video_file: UploadFile, save_root: str):
@@ -77,12 +80,13 @@ async def process_video(video_name: str):
     checkpoint = "./OpenPVSG/work_dirs/mask2former_r50_ips/epoch_8.pth"
     port = str(29500 + os.getpid() % 29)  # Generate a port based on process ID
     gpus_per_node = "1"
-    cpus_per_task = "5"
+    cpus_per_task = "3"
 
     # Build the SLURM command
     command = [
         "srun", "-p", partition,
         "--job-name", job_name,
+        "--nodelist", "phoenix3",
         "--gres=gpu:" + gpus_per_node,
         "--ntasks-per-node=" + gpus_per_node,
         "--cpus-per-task=" + cpus_per_task,
@@ -103,12 +107,46 @@ async def process_video(video_name: str):
     except subprocess.CalledProcessError as e:
         print(f"Error: {e.stderr}")
         return {"status": "error", "error_message": e.stderr}
+    
+
+async def process_video_yolo(video_name: str):
+    input_folder = os.path.join(SAVE_ROOT, "frames", video_name)
+    image_files = sorted([f for f in os.listdir(input_folder) if f.endswith(('.jpg', '.jpeg', '.png'))])
+
+    if not image_files:
+        print("No images found in the input folder.")
+        return
+
+    model = YOLO("yolov8m-oiv7.pt")
+    class_names = model.names
+
+    for image_file in image_files[:10]:
+        image_path = os.path.join(input_folder, image_file)
+        img = cv2.imread(image_path)
+
+        if img is None:
+            print(f"Error loading image: {image_file}")
+            continue
+
+        # Run inference
+        results = model(img)
+
+        # Process results and draw bounding boxes
+        print(f"Results for {image_file}:")
+        for result in results:
+            for box in result.boxes:
+                x1, y1, x2, y2 = map(int, box.xyxy[0])  # Bounding box
+                conf = float(box.conf[0])  # Confidence score
+                cls = int(box.cls[0])  # Class ID
+                print(f"  {cls}: {class_names[cls]} at ({x1}, {y1}) ({x2}, {y2})")
+        
+        print()
 
 
 @app.post("/video_detection")
 async def process_uploaded_video(video: UploadFile = File(...)):
     video_name = video.filename.split(".")[0]
     await extract_frames(video, SAVE_ROOT)
-    await process_video(video_name)
+    await process_video_yolo(video_name)
     return JSONResponse(content={"message": "Video processing started"})
     

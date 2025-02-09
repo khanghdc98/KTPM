@@ -1,1 +1,11 @@
 detection/extracted_frames
+**/__pycache__/
+
+detection/data/videos/*
+detection/data/frames/*
+detection/OpenPVSG/data/videos/*
+detection/OpenPVSG/data/frames/*
+
+**.pth
+**.pickle
+**.pt
