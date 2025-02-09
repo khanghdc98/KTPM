@@ -1,5 +1,6 @@
 detection/extracted_frames
 **/__pycache__/
+**.pyc
 
 detection/data/videos/*
 detection/data/frames/*

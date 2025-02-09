@@ -2,19 +2,40 @@ from fastapi import UploadFile
 import base64
 import requests
 from config import PROCESSING_SERVER_URL
-
-
-def fix_base64_padding(base64_str: str) -> str:
-    missing_padding = len(base64_str) % 4
-    if missing_padding:
-        base64_str += "=" * (4 - missing_padding)
-    return base64_str
+from .utils import fix_base64_padding, fix_json_keys
 
 
 async def align(video, text: str):
     files = {"video": (video.filename, video.file, video.content_type)}
     response = requests.post(PROCESSING_SERVER_URL, files=files)
-    return response.json()
+    detections = response.json()
+
+    # Convert keys back to integers
+    detections = fix_json_keys(detections)
+
+    # Split text into sentences
+    splits = text.split(".")
+    sentences = {i: s.strip().lower() for i, s in enumerate(splits)}
+
+    # Process
+    results = {}
+    for sentence_key, sentence in sentences.items():
+        frames = {}
+        for frame_key, frame_data in detections.items():
+            frame_detections = []
+            for detection in frame_data:
+                if detection["tokenId"] in sentence:
+                    frame_detections.append(detection)
+            if len(frame_detections) > 0:
+                frames[frame_key] = frame_detections
+        if len(frames) > 0:
+            results[sentence_key] = frames
+
+    return {
+        "allFrames": list(detections.keys()),
+        "allSentences": list(sentences.values()),
+        "results": results
+    }
 
 
 async def get_mock_response_data(video_content, text):

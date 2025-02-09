@@ -8,6 +8,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import subprocess
+from utils import convert_to_tlwh
 
 
 app = FastAPI()
@@ -120,16 +121,22 @@ async def process_video_yolo(video_name: str):
     model = YOLO("yolov8m-oiv7.pt")
     class_names = model.names
 
-    for image_file in image_files[:10]:
+    outputs = {}
+    for image_file in image_files:
         image_path = os.path.join(input_folder, image_file)
         img = cv2.imread(image_path)
+        image_height, image_width = img.shape[:2]  # Get image dimensions
 
         if img is None:
             print(f"Error loading image: {image_file}")
             continue
 
+        # Prepare output dictionary
+        timestamp = int(image_file.split(".")[0])
+        outputs[timestamp] = []
+
         # Run inference
-        results = model(img)
+        results = model(img, verbose=False)
 
         # Process results and draw bounding boxes
         print(f"Results for {image_file}:")
@@ -138,15 +145,26 @@ async def process_video_yolo(video_name: str):
                 x1, y1, x2, y2 = map(int, box.xyxy[0])  # Bounding box
                 conf = float(box.conf[0])  # Confidence score
                 cls = int(box.cls[0])  # Class ID
-                print(f"  {cls}: {class_names[cls]} at ({x1}, {y1}) ({x2}, {y2})")
-        
+                top_left_x, top_left_y, width, height = convert_to_tlwh(x1, y1, x2, y2, image_width, image_height)
+                # print(f"  {cls}: {class_names[cls]} at ({top_left_x}, {top_left_y}) ({width}, {height})")
+                print(class_names[cls].lower(), conf)
+                if conf > 0.3:
+                    outputs[timestamp].append({
+                        "tokenId": class_names[cls].lower(), 
+                        "bbox": [top_left_x, top_left_y, width, height]
+                    })
+
         print()
+
+    return outputs
+        
+        
 
 
 @app.post("/video_detection")
 async def process_uploaded_video(video: UploadFile = File(...)):
     video_name = video.filename.split(".")[0]
     await extract_frames(video, SAVE_ROOT)
-    await process_video_yolo(video_name)
-    return JSONResponse(content={"message": "Video processing started"})
+    outputs = await process_video_yolo(video_name)
+    return JSONResponse(content=outputs)
     
