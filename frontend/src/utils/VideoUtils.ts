@@ -65,8 +65,9 @@ export const drawDetections = (
         color = color.replace('...', '1');
         const [x, y, width, height] = bbox;
 
-        const xPos = x / 100 * canvasWidth;
-        const yPos = y / 100 * canvasHeight;
+        const xPos = y / 100 * canvasWidth; // 'y' is actually left
+        const yPos = x / 100 * canvasHeight; // 'x' is actually top
+
         const boxWidth = width / 100 * canvasWidth;
         const boxHeight = height / 100 * canvasHeight;
 

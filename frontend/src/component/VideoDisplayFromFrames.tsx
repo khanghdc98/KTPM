@@ -39,7 +39,7 @@ export const VideoDisplayFromData = ({
         const generateVideo = async () => {
             const frames: (HTMLCanvasElement | null)[] = await Promise.all(
                 firstTimeStampForEachSentence.map(async (timestamp, index) => {
-                    console.log("timestamp", timestamp);
+                    console.log("timestamp", timestamp, firstTimeStampForEachSentence);
                     const frameImage = videoFrames[timestamp];
                     const detections = detectionForEachFirstFrameOfEachSentence[index];
 

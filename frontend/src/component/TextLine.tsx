@@ -12,11 +12,13 @@ export const TextLine: React.FC<{
 	colorMap = colorMap ? colorMap : getUniqueColors([...new Set(tokens)]);
 
 	const words = sentence.split(" ");
+	console.log("words", words);
 	const highlightedWords: JSX.Element[] = [];
 	let i = 0;
 
 	while (i < words.length) {
 		let matchedToken = "";
+		let matchedWord = "";
 		let matchedLength = 0;
 
 		// Try to match multi-word tokens from longest to shortest
@@ -30,6 +32,7 @@ export const TextLine: React.FC<{
 				candidatePhrase.substring(0, candidatePhrase.length - 1) === token
 			) {
 				matchedToken = token;
+				matchedWord = candidatePhrase;
 				matchedLength = tokenLength;
 				break; // Stop on first match
 			}
@@ -51,7 +54,7 @@ export const TextLine: React.FC<{
 					}}
 					onClick={() => setChosenToken && setChosenToken(matchedToken)}
 				>
-					{matchedToken}
+					{matchedWord}
 				</span>,
 			);
 			highlightedWords.push(<span key={`space-${i}`}> </span>);

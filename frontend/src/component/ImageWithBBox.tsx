@@ -42,7 +42,7 @@ export const ImageWithBBox: React.FC<ImageWithBBoxProps> = ({
 						left: `${detection.bbox[1]}%`,
 						width: `${detection.bbox[2]}%`,
 						height: `${detection.bbox[3]}%`,
-						border: `2px solid ${chosenToken === detection.tokenId ? colorMap[detection.tokenId].replace("...", "1") : colorMap[detection.tokenId]?.replace("...", "0.5") || "black"}`,
+						border: `4px solid ${chosenToken === detection.tokenId ? colorMap[detection.tokenId].replace("...", "1") : colorMap[detection.tokenId]?.replace("...", "0.5") || "black"}`,
 						cursor: "pointer",
 					}}
 					onClick={() => setChosenToken && setChosenToken(detection.tokenId)}

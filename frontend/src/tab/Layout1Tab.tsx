@@ -1,5 +1,5 @@
 import { Box, Divider } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
 	AutoSizer,
 	CellMeasurer,
@@ -8,7 +8,7 @@ import {
 } from "react-virtualized";
 import { ImageWithBBoxWrapper } from "../component/ImageWithBBoxWrapper";
 import { TextLine } from "../component/TextLine";
-import type { Detection, GeneralData } from "../types/ResultType";
+import type { Detection, FrameResults, GeneralData } from "../types/ResultType";
 import { getUniqueColors } from "../utils/ColorUtils";
 
 export const Layout1Tab = ({ data }: { data: GeneralData }) => {
@@ -18,6 +18,25 @@ export const Layout1Tab = ({ data }: { data: GeneralData }) => {
 		fixedWidth: true,
 		minHeight: 100,
 	});
+	const sentenceTimeStampAndDetections = useMemo(
+			() => Object.values(data.results).flat(1),
+			[data.results],
+		);
+	
+		const tokens = useMemo(
+			() =>
+				sentenceTimeStampAndDetections.flatMap((d: FrameResults) =>
+					Object.values(d).flatMap((detection: Detection[]) =>
+						detection.map((d) => d.tokenId),
+					),
+				),
+			[sentenceTimeStampAndDetections],
+		);
+	
+		const colorMap = useMemo(
+			() => getUniqueColors([...new Set(tokens)]),
+			[tokens],
+		);
 
 	const rowRenderer = ({
 		index,
@@ -31,6 +50,7 @@ export const Layout1Tab = ({ data }: { data: GeneralData }) => {
 		parent: any;
 	}) => {
 		const text = sentences[index];
+		console.log("text", text);
 		const timeStampAndDetections = data.results[index];
 		const fameTimestamps = Object.keys(timeStampAndDetections).map(
 			(timestamp) => Number.parseInt(timestamp),
@@ -40,7 +60,6 @@ export const Layout1Tab = ({ data }: { data: GeneralData }) => {
 				return detection.map((d) => d.tokenId);
 			},
 		);
-		const colorMap = getUniqueColors([...new Set(tokens)]);
 
 		return (
 			<CellMeasurer
