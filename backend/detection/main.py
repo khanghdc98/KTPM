@@ -4,6 +4,8 @@ from PIL import Image
 from ultralytics import YOLO
 import tempfile
 import numpy as np
+import shutil
+import time
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,25 +26,22 @@ app.add_middleware(
 )
 
 # SAVE_ROOT = "./OpenPVSG/data"
-SAVE_ROOT = "./data"
+SAVE_ROOT = "/home/hlmquan/ktpm/KTPM/backend/detection/data"
 
 
-async def extract_frames(video_file: UploadFile, save_root: str):
+async def extract_frames(video_file: UploadFile, video_name: str, save_root: str):
     """
     Processes the uploaded video file and extracts one frame per second.
     """
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
-        temp_video.write(video_file.file.read())
-        temp_path = temp_video.name
-        video_path = os.path.join(save_root, "videos", video_file.filename)
-        with open(video_path, "wb") as buffer:
-            buffer.write(await video_file.read())
+    video_path = os.path.join(save_root, "videos", f"{video_name}.mp4")
+    with open(video_path, "wb") as buffer:
+        shutil.copyfileobj(video_file.file, buffer)
 
-    video_name = os.path.splitext(video_file.filename)[0]
     save_dir = os.path.join(save_root, "frames", video_name)
     os.makedirs(save_dir, exist_ok=True)
 
-    cap = cv2.VideoCapture(temp_path)
+    print(video_path)
+    cap = cv2.VideoCapture(video_path)
     
     if not cap.isOpened():
         return {"error": "Failed to open video file"}
@@ -64,7 +63,6 @@ async def extract_frames(video_file: UploadFile, save_root: str):
             count += 1
 
     cap.release()
-    os.remove(temp_path)
 
     print("Frames extracted")
 
@@ -108,11 +106,13 @@ async def process_video(video_name: str):
     except subprocess.CalledProcessError as e:
         print(f"Error: {e.stderr}")
         return {"status": "error", "error_message": e.stderr}
+        
     
-
 async def process_video_yolo(video_name: str):
     input_folder = os.path.join(SAVE_ROOT, "frames", video_name)
+    print(input_folder)
     image_files = sorted([f for f in os.listdir(input_folder) if f.endswith(('.jpg', '.jpeg', '.png'))])
+    print(len(image_files))
 
     if not image_files:
         print("No images found in the input folder.")
@@ -123,6 +123,7 @@ async def process_video_yolo(video_name: str):
 
     outputs = {}
     for image_file in image_files:
+        print(image_file)
         image_path = os.path.join(input_folder, image_file)
         img = cv2.imread(image_path)
         image_height, image_width = img.shape[:2]  # Get image dimensions
@@ -145,24 +146,22 @@ async def process_video_yolo(video_name: str):
                 x1, y1, x2, y2 = map(int, box.xyxy[0])  # Bounding box
                 conf = float(box.conf[0])  # Confidence score
                 cls = int(box.cls[0])  # Class ID
-                top_left_x, top_left_y, width, height = convert_to_tlwh(x1, y1, x2, y2, image_width, image_height)
+                top, left, width, height = convert_to_tlwh(x1, y1, x2, y2, image_width, image_height)
                 # print(f"  {cls}: {class_names[cls]} at ({top_left_x}, {top_left_y}) ({width}, {height})")
                 # print(class_names[cls].lower(), conf)
                 if conf > 0.3:
                     outputs[timestamp].append({
                         "tokenId": class_names[cls].lower(), 
-                        "bbox": [top_left_x, top_left_y, width, height]
+                        "bbox": [top, left, width, height]
                     })
 
     return outputs
-        
-        
 
 
 @app.post("/video_detection")
 async def process_uploaded_video(video: UploadFile = File(...)):
-    video_name = video.filename.split(".")[0]
-    await extract_frames(video, SAVE_ROOT)
+    video_name = time.strftime("%Y%m%d-%H%M%S")
+    await extract_frames(video, video_name, SAVE_ROOT)
     outputs = await process_video_yolo(video_name)
     return JSONResponse(content=outputs)
     

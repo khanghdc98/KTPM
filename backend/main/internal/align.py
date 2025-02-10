@@ -2,7 +2,7 @@ from fastapi import UploadFile
 import base64
 import requests
 from config import PROCESSING_SERVER_URL
-from .utils import fix_base64_padding, fix_json_keys
+from .utils import fix_base64_padding, fix_json_keys, extract_nouns, check_condition
 
 
 async def align(video, text: str):
@@ -15,24 +15,29 @@ async def align(video, text: str):
 
     # Split text into sentences
     splits = text.split(".")
-    sentences = {i: s.strip().lower() for i, s in enumerate(splits)}
+    sentences = {i: s.strip().lower() + "." for i, s in enumerate(splits)}
 
     # Process
+    allFrames = []
     results = {}
     for sentence_key, sentence in sentences.items():
+        print(f"Processing sentence {sentence_key}: {sentence}")
         frames = {}
         for frame_key, frame_data in detections.items():
-            frame_detections = []
-            for detection in frame_data:
-                if detection["tokenId"] in sentence:
-                    frame_detections.append(detection)
-            if len(frame_detections) > 0:
-                frames[frame_key] = frame_detections
+            tokenIDs = [d["tokenId"] for d in frame_data]
+            objects = extract_nouns(sentence)
+            print(f"tokens: {tokenIDs}, objects: {objects}")
+            if check_condition(objects, tokenIDs):
+                frames[frame_key] = [d for d in frame_data if d["tokenId"] in objects]
+                allFrames.append(frame_key)
         if len(frames) > 0:
             results[sentence_key] = frames
+        print()
+
+    allFrames = sorted(list(set(allFrames)))
 
     return {
-        "allFrames": list(detections.keys()),
+        "allFrames": allFrames,
         "allSentences": list(sentences.values()),
         "results": results
     }
